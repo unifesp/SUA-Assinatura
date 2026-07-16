@@ -1,0 +1,20 @@
+{
+  "institution": {
+    "name": "Universidade Federal de São Paulo",
+    "logoUrl": "images/geral/unifesp.png"
+  },
+  "sectors": [
+    {
+      "name": "STI - Superintendência de Tecnologia da Informação",
+      "logoUrl": "images/setores/sti.png",
+      "url": "https://sti.unifesp.br"
+    }
+  ],
+  "colors": {
+    "primary": "#1E5A3A"
+  },
+  "api": {
+    "directoryLookupUrl": "https://script.google.com/macros/s/AKfycbwFfVK-WwdcJ8oNL_4iVK1DTbQmOW7eXlrz57dMwMINW4rW2Lu-NFEIiToYOgSQ2xrz/exec",
+    "signatureInjectUrl": "COLE_AQUI_A_URL_DO_SEGUNDO_DEPLOYMENT"
+  }
+}
