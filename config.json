@@ -2,16 +2,19 @@
   "institution": {
     "name": "Universidade Federal de São Paulo",
     "sigla": "UNIFESP",
-    "logoUrl": "images/geral/unifesp.png"
+    "logoUrl": "images/geral/unifesp.png",
+    "url": "https://portal.unifesp.br/"
   },
   "sectors": [
     {
-      "name": "STI - Superintendência de Tecnologia da Informação",
+      "name": "Superintendência de Tecnologia da Informação",
+      "sigla": "STI",
       "logoUrl": "images/setores/sti.png",
       "url": "https://sti.unifesp.br"
     },
     {
-      "name": "DCI - Departamento de Comunicação Institucional",
+      "name": "Departamento de Comunicação Institucional",
+      "sigla": "DCI",
       "logoUrl": "images/setores/dci.svg",
       "url": "https://dci.unifesp.br"
     }
