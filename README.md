@@ -1,6 +1,6 @@
 # Manual de Implementação do SUA Assinatura
 
-Este manual descreve, passo a passo, como implantar o **SUA Assinatura** em outra instituição. A ferramenta foi originalmente desenvolvida para a Universidade Federal de São Paulo (UNIFESP), mas foi projetada desde a versão 1.1 para ser reutilizada por qualquer instituição do governo que utilize Google Workspace, através de um único arquivo de configuração (`config.json`).
+Este manual descreve, passo a passo, como implantar o **SUA Assinatura** em outra instituição. A ferramenta foi originalmente desenvolvida para a Universidade Federal de São Paulo (UNIFESP), mas foi projetada desde a versão 1.1 para ser reutilizada por outras instituições do governo que utilizem o Google Workspace, através de um único arquivo de configuração (`config.json`).
 
 Repositório oficial: `https://github.com/unifesp/gerador-de-assinaturas`
 
