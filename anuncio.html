@@ -8,6 +8,26 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
+        // Google Analytics (GA4): carregado dinamicamente a partir do config.json,
+        // igual ao index.html, para manter uma unica fonte de configuracao por instituicao.
+        (async function initGA() {
+            try {
+                const res = await fetch('config.json');
+                const cfg = await res.json();
+                const gaId = cfg.analytics && cfg.analytics.measurementId;
+                if (gaId && !gaId.startsWith('COLE_AQUI')) {
+                    const s = document.createElement('script');
+                    s.async = true;
+                    s.src = `https://www.googletagmanager.com/gtag/js?id=${gaId}`;
+                    document.head.appendChild(s);
+                    window.dataLayer = window.dataLayer || [];
+                    window.gtag = function () { window.dataLayer.push(arguments); };
+                    window.gtag('js', new Date());
+                    window.gtag('config', gaId);
+                }
+            } catch (err) { console.error('GA: erro ao carregar config.json', err); }
+        })();
+
         tailwind.config = {
             darkMode: 'class',
             theme: {

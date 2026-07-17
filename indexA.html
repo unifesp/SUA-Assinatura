@@ -440,6 +440,28 @@
 
         const GAS_WEBAPP_URL = APP_CONFIG.api.directoryLookupUrl;
 
+        // Google Analytics (GA4): carregado dinamicamente porque o ID de medição vem do
+        // config.json (para que cada instituição use sua própria conta, sem editar o HTML).
+        // Se o campo não estiver preenchido (ainda com o placeholder), a análise fica desativada
+        // silenciosamente, sem quebrar o restante da aplicação.
+        const gaId = APP_CONFIG.analytics && APP_CONFIG.analytics.measurementId;
+        let gaEnabled = false;
+        if (gaId && !gaId.startsWith('COLE_AQUI')) {
+            const gaScript = document.createElement('script');
+            gaScript.async = true;
+            gaScript.src = `https://www.googletagmanager.com/gtag/js?id=${gaId}`;
+            document.head.appendChild(gaScript);
+            window.dataLayer = window.dataLayer || [];
+            window.gtag = function () { window.dataLayer.push(arguments); };
+            window.gtag('js', new Date());
+            window.gtag('config', gaId);
+            gaEnabled = true;
+        }
+        // Função auxiliar de rastreamento de eventos: não faz nada se o GA não estiver configurado.
+        function trackEvent(eventName, params) {
+            if (gaEnabled && window.gtag) window.gtag('event', eventName, params || {});
+        }
+
         // URL do SEGUNDO Web App do mesmo projeto Apps Script, implantado separadamente com
         // "Executar como: Usuário que acessa o app da web" e "Quem tem acesso: Qualquer pessoa
         // na organização". É esse segundo deployment que grava a assinatura no Gmail do próprio
@@ -502,8 +524,14 @@
                     if (data.phone) inputs.phone.value = data.phone;
                     if (data.ramal) inputs.ramal.value = data.ramal;
                     updatePreview();
+                    trackEvent('autofill_success');
+                } else {
+                    trackEvent('autofill_not_found');
                 }
-            } catch (err) { console.error("Erro no autopreenchimento:", err); }
+            } catch (err) {
+                console.error("Erro no autopreenchimento:", err);
+                trackEvent('autofill_error');
+            }
             finally { loader.classList.add('hidden'); }
         }
 
@@ -641,7 +669,10 @@
         }
 
         document.querySelectorAll('input[name="layoutType"]').forEach(radio => {
-            radio.addEventListener('click', updatePreview);
+            radio.addEventListener('click', () => {
+                updatePreview();
+                trackEvent('layout_selected', { layout: radio.value });
+            });
         });
 
         Object.values(inputs).forEach(input => {
@@ -680,7 +711,10 @@
             }
             updatePreview();
         }
-        sectorSelect.addEventListener('change', handleSectorChange);
+        sectorSelect.addEventListener('change', () => {
+            handleSectorChange();
+            trackEvent('sector_selected', { sector: sectorSelect.options[sectorSelect.selectedIndex]?.textContent || '' });
+        });
 
         const emailInput = document.getElementById('email');
         const injectButton = document.getElementById('injectButton');
@@ -709,6 +743,7 @@
             const form = document.getElementById('injectSignatureForm');
             form.action = GAS_SIGNATURE_INJECT_URL;
             document.getElementById('injectSignatureHtml').value = generateSignature().trim();
+            trackEvent('inject_signature_attempt');
             form.submit();
         });
 
@@ -730,6 +765,8 @@
                 btn.innerHTML = '<i class="fa-solid fa-check"></i> Copiado!';
                 btn.classList.add('success');
                 setTimeout(() => { btn.innerHTML = orig; btn.classList.remove('success'); }, 3000);
+                const layoutType = document.querySelector('input[name="layoutType"]:checked')?.value || 'completo';
+                trackEvent('copy_signature', { layout: layoutType });
             }
             container.removeAttribute('contenteditable');
             selection.removeAllRanges();
